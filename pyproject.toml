@@ -6,15 +6,13 @@ readme = "README.md"
 authors = [{ name = "s1mplist", email = "gustavopinheiro.az@outlook.com" }]
 requires-python = ">=3.11"
 dependencies = [
+    "langchain>=0.3.15",
     "langchain-openai>=0.3.2",
     "langgraph>=0.2.67",
-    "requests>=2.32.3",
 ]
 
 [project.scripts]
 riotfind = "riotfind:main"
-coverage = "coverage run -m pytest"
-pytest = "python -m pytest"
 
 [build-system]
 requires = ["hatchling"]
@@ -25,6 +23,7 @@ dev = [
     "coverage>=7.6.10",
     "ipykernel>=6.29.5",
     "ipywidgets>=8.1.5",
+    "langchain-experimental>=0.3.4",
     "pytest>=8.3.4",
 ]
 
