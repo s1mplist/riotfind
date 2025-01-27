@@ -18,7 +18,11 @@ logger = logging.getLogger(__name__)
 
 
 class RiotCaller:
-    def __init__(self, server: RiotServer = RiotServer.AMERICAS, region: RiotRegion = RiotRegion.BR1):
+    def __init__(
+        self,
+        server: RiotServer = RiotServer.AMERICAS,
+        region: RiotRegion = RiotRegion.BR1,
+    ):
         """Inicializa a classe RiotCaller com servidor, região e configurações de endpoints."""
 
         if not isinstance(server, RiotServer):
@@ -38,19 +42,19 @@ class RiotCaller:
             logger.warning(
                 "API Key is not set. Ensure that 'RIOT_API_KEY' is in your environment variables."
             )
-    
+
     def _get_base_url(self, scope: Scope) -> str:
         """Retorna a URL base correta de acordo com o escopo."""
-        if scope == "server":
+        if scope.value == "server":
             return self.server_url
-        elif scope == "region":
+        elif scope.value == "region":
             return self.region_url
         else:
             raise ValueError(f"Unknown scope '{scope}'.")
-        
+
     def _validate_service_params(self, service_data: ServiceData, params: Dict):
         """Valida os parâmetros fornecidos contra os obrigatórios e os valores válidos."""
-        
+
         if service_data["is_params_required"]:
             required_params = service_data["required_params"]
             missing_params = [param for param in required_params if param not in params]
@@ -64,7 +68,7 @@ class RiotCaller:
                 param_info = PARAMS[param]
                 if param_info["options"] and value not in param_info["options"]:
                     raise ValueError(f"Invalid value for parameter '{param}': {value}")
-    
+
     def _make_request(self, url: str) -> Dict:
         """Realiza a requisição HTTP à API Riot e retorna a resposta JSON."""
         try:
@@ -76,7 +80,7 @@ class RiotCaller:
         except requests.RequestException as e:
             logger.error(f"Request failed: {url} - {e}")
             raise ValueError(f"Request failed: {url}") from e
-    
+
     def call_service(self, service_name: str, params: Optional[Dict] = None) -> Dict:
         """
         Interface única para o usuário. Ele apenas fornece o nome do serviço e os parâmetros.

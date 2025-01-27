@@ -1,20 +1,24 @@
-from typing import List, Dict, TypedDict
+from typing import List, Dict, TypedDict, Union, Optional
 from enum import Enum
 
 
-class Scope(str, Enum):
+class RiotEnum(Enum):
+    string: str
+    enum: Enum
+
+class Scope(RiotEnum):
     REGION = "region"
     SERVER = "server"
 
 
-class RiotServer(str, Enum):
+class RiotServer(RiotEnum):
     AMERICAS = "americas"
     ASIA = "asia"
     EUROPE = "europe"
     ESPORTS = "esports"
 
 
-class RiotRegion(str, Enum):
+class RiotRegion(RiotEnum):
     BR1 = "BR1"
     EUN1 = "EUN1"
     EUW1 = "EUW1"
@@ -34,18 +38,18 @@ class RiotRegion(str, Enum):
     VN2 = "VN2"
 
 
-class RiotGame(str, Enum):
+class RiotGame(RiotEnum):
     VALORANT = "val"
     LEGENDS_OF_RUNETERRA = "lor"
 
 
-class LolQueue(str, Enum):
+class LolQueue(RiotEnum):
     RANKED_SOLO_5x5 = "RANKED_SOLO_5x5"
     RANKED_FLEX_SR = "RANKED_FLEX_SR"
     RANKED_FLEX_TT = "RANKED_FLEX_TT"
 
 
-class LolTier(str, Enum):
+class LolTier(RiotEnum):
     BRONZE = "BRONZE"
     IRON = "IRON"
     SILVER = "SILVER"
@@ -55,7 +59,7 @@ class LolTier(str, Enum):
     DIAMOND = "DIAMOND"
 
 
-class LolDivision(str, Enum):
+class LolDivision(RiotEnum):
     I = "I"
     II = "II"
     III = "III"
@@ -65,7 +69,7 @@ class LolDivision(str, Enum):
 
 class ParamInfo(TypedDict):
     description: str
-    options: List[str]
+    options: Union[type[RiotEnum], None]
 
 
 class ServiceData(TypedDict):
@@ -81,49 +85,32 @@ class EndpointGroup(TypedDict):
 
 
 PARAMS: Dict[str, ParamInfo] = {
+    "gameName": {"description": "Nome do jogador no jogo.", "options": None},
+    "tagLine": {"description": "Tag do jogador no jogo.", "options": None},
     "puuid": {
         "description": "Identificador único do jogador no jogo.",
-        "options": [],
-    },
-    "gameName": {
-        "description": "Nome do jogador no jogo.",
-        "options": [],
-    },
-    "tagLine": {
-        "description": "Tag do jogador no jogo.",
-        "options": [],
+        "options": None,
     },
     "game": {
         "description": "Nome do jogo (ex: 'val', 'lor').",
-        "options": ["val", "lor"],
+        "options": RiotGame,
     },
     "queue": {
         "description": "Tipo de fila no jogo.",
-        "options": ["RANKED_SOLO_5x5", "RANKED_FLEX_SR", "RANKED_FLEX_TT"],
+        "options": LolQueue,
     },
     "tier": {
         "description": "Tier do jogador.",
-        "options": [
-            "BRONZE",
-            "IRON",
-            "SILVER",
-            "GOLD",
-            "PLATINUM",
-            "EMERALD",
-            "DIAMOND",
-        ],
+        "options": LolTier,
     },
     "division": {
         "description": "Divisão do jogador dentro do tier.",
-        "options": ["I", "II", "III", "IV", "V"],
+        "options": LolDivision,
     },
-    "leagueId": {
-        "description": "ID da liga no jogo.",
-        "options": [],
-    },
+    "leagueId": {"description": "ID da liga no jogo.", "options": None},
     "encryptedSummonerId": {
         "description": "ID criptografado do invocador.",
-        "options": [],
+        "options": None,
     },
 }
 
